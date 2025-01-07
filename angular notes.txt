@@ -1,0 +1,151 @@
+Angular is a frontend java script framework. In helps with building interactive, modern web user interfaces.
+It is also a collection of tools and features (CLI,Debugging tools, IDE Plugins)
+
+Write declarative code
+Separation of concerns via components
+object oriented programming concepts and principles
+Type Script
+
+Componenets:
+Break up the complex application into simple building blocks
+Split up the responsibilities and concerns
+build a component once and re-use often if needed
+
+
+ng new command is used to create a angular project
+ng new first-angular-application
+
+To start the server:
+npm start
+
+Understanding the angular project structure
+woring with components
+Handling User Events
+Rendaring and updating Dynamic UI content
+
+ts file will have component decarator
+
+AppComponent:
+1. Header Component
+2. User Component
+3. Tasks Component -> i. Task Component
+
+Creating a component folder and files:
+ng g c user
+it will create a componet folder name as user and scss,html and ts files in it
+
+string interpollution:
+using {{}} in the html file
+ex:
+<span>{{selectedUser.name}}</span>
+
+property binding:
+[]
+ex:
+<img [src] = "'assets/users/'+selectedUser.avatar" [alt] = "selectedUser.name" />
+
+Events:
+<button (click)="onUserSelected()">
+
+Zone.js -> A "Zone" Zone.js notifies the angular about the user events, expired timers etc..
+
+There are 2 approches for updating state:
+option 1:
+Relying on zone.js & Angular change detection mechanism
+it works automatically no signal instractions required. supports in angular 2
+
+option 2:
+Signal:
+using signals to notify angular about value changes & required UI updates.
+it requires usage of special "signal" instractions & code. supports since angular 16
+
+Signals are tracable data contrainers
+A signal is an object that stores a value(any type of value, including nested objects)
+Any value:
+1. app component
+2.user component
+3. computed signal
+
+Angular manges subscriptions to the signal to get nofified about value changes
+when a change occurs, Angular is then able to update the part of the UI that needs updating
+
+whenever your dealing with the property that stores a signal you have to execute that property as function to get the latest value from it.
+ex:
+<span>{{selectedUser.name}}</span>
+instead this we need to use like this <span>{{selectedUser().name}}</span>
+
+we can add the decorator to properites of the classes also 
+@Input
+for reusable components
+
+configuration the required option in input decarator
+ex:
+@Input({required :true}) name:string;
+
+Input it is a decarator
+@Input({required:true}) name!:string;
+input it is a special function
+  name = input.required<string>();
+  
+  
+select = output<string>();// output that not send any signal
+
+//angular 17
+ @for (user of users; track user.id){
+            <li>
+                <app-user [user]="user" (select)="onSelectUser($event)"/>
+            </li>
+        }
+		
+    @if(selectedUser){
+        <app-tasks [name] = "selectedUser.name"  />
+    } @else{
+        <p id="fallback"> Select a user to see their tasks</p>
+    }
+	
+	
+for creating an event:
+ @Output() cancle = new EventEmitter<void>();
+  onCancle(){
+this.cancle.emit();
+  }
+  
+  
+directives:
+with angular you can "enhance" elements by adding so called directives to them
+<input ngModel>
+ngModel -> is a directive
+
+Two way binding:
+ex:
+[(ngModel)]
+
+forms module is a collection of directives and features that help you dealing with forms and with user inputs.
+ <p>
+      <label for="title">Title</label>
+      <input type="text" id="title" name="title" [(ngModel)]="enteredTitle"/>
+    </p>
+  enteredTitle = '';
+  
+  
+ ng-content
+ date pipe: date format we will use
+ ex:
+ <time>{{task!.dueDate}}</time>
+ <time>{{task!.dueDate | date:'short'}}</time>
+ <time>{{task!.dueDate | date:'fullDate'}}</time>
+ 
+ 
+ 
+ constructor(){
+        const tasks = localStorage.getItem('tasks');
+        if(tasks){
+          this.tasks = JSON.parse(tasks);
+        }
+      }
+	  
+	  
+	  
+	  private saveTasks(){
+        localStorage.setItem('tasks',JSON.stringify(this.tasks));
+      }
